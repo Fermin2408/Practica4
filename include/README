@@ -35,3 +35,81 @@ Read more about using header files in official GCC documentation:
 * Computed Includes
 
 https://gcc.gnu.org/onlinedocs/cpp/Header-Files.html
+
+
+Conclusiones:
+
+1. ¿Cuál es la diferencia entre usar una variable global y una cola para comunicar datos? 
+
+    Una variable global permite que varias tareas accedan directamente a la misma información, 
+    pero esto puede generar conflictos si dos tareas intentan modificarla al mismo tiempo. En cambio,
+    una cola organiza el intercambio de datos de forma más segura, ya que una tarea envía información y 
+    otra la recibe sin acceder directamente a la memoria de la otra. Esto hace que el sistema sea más 
+    ordenado y confiable.
+
+2. ¿Qué tarea queda bloqueada cuando espera datos de una cola? 
+
+    La tarea que intenta recibir información de la cola es la que queda bloqueada mientras no haya datos 
+    disponibles. Durante ese tiempo no consume recursos del procesador y simplemente espera hasta que 
+    otra tarea envíe información.
+
+3. ¿Por qué TaskManager debe concentrar las decisiones del sistema? 
+
+    Porque actúa como el coordinador principal del sistema. Si cada tarea tomara decisiones por su cuenta, 
+    podrían aparecer comportamientos inesperados o conflictos entre ellas. Al centralizar las decisiones 
+    en TaskManager se mantiene un flujo de operación más claro, organizado y fácil de controlar.
+
+4. ¿Por qué pvParameters es más flexible que crear una función distinta por tarea? 
+
+    Porque permite utilizar la misma función para varias tareas cambiando únicamente los parámetros que 
+    recibe. Esto evita duplicar código y facilita realizar modificaciones futuras, ya que una sola 
+    función puede adaptarse a diferentes configuraciones.
+
+5. ¿Qué diferencia existe entre suspender una tarea y bloquearla esperando una cola?
+
+    Cuando una tarea se suspende, deja de ejecutarse completamente hasta que otra tarea la reactive. 
+    En cambio, cuando está bloqueada esperando datos de una cola, permanece en espera de manera automática 
+    y se reactiva tan pronto como llega nueva información. La principal diferencia es que una tarea 
+    suspendida necesita una orden externa para continuar, mientras que una bloqueada puede reanudarse 
+    por sí sola cuando ocurre el evento esperado.
+
+6. ¿Qué efecto tiene aumentar el tamaño de la ventana del filtro de mediana?
+
+    Al aumentar la cantidad de muestras utilizadas por el filtro, las lecturas se vuelven más estables y 
+    menos sensibles al ruido. Sin embargo, también hace que el sistema responda más lentamente a cambios 
+    reales en la señal, ya que necesita analizar más datos antes de generar un resultado.
+
+7. ¿Por qué un filtro de mediana rechaza picos mejor que un promedio simple?
+
+    Porque la mediana selecciona el valor central de un conjunto de muestras y no se ve afectada 
+    significativamente por valores extremos. En cambio, el promedio sí toma en cuenta todos los valores, 
+    por lo que una lectura anormal puede alterar considerablemente el resultado final.
+
+8. ¿Qué ocurre si se presiona Start-operation mientras el servo está en movimiento?
+
+    El sistema ignora esa acción porque ya se encuentra ejecutando una operación. Esto evita que se 
+    generen órdenes contradictorias o que el movimiento actual sea interrumpido antes de llegar a su 
+    objetivo.
+
+9. ¿Cómo se garantiza que el botón de velocidad solo funcione durante la operación?
+
+    El TaskManager verifica constantemente el estado del sistema. Solo cuando el sistema se encuentra 
+    en modo de operación permite procesar los eventos del botón de velocidad. Si se presiona en otro 
+    momento, la solicitud es ignorada para evitar comportamientos incorrectos.
+
+10. ¿Por qué un constexpr en C++ es preferible a #define para constantes tipadas?
+
+    Porque constexpr respeta los tipos de datos y es verificado por el compilador, lo que ayuda a 
+    detectar errores antes de ejecutar el programa. Además, mejora la legibilidad del código y facilita 
+    el mantenimiento del proyecto. Por otro lado, #define simplemente reemplaza texto y no ofrece estas 
+    ventajas de seguridad y control.
+
+Conclusión general de la práctica
+
+    Durante esta práctica se comprendió cómo estructurar un sistema basado en FreeRTOS utilizando 
+    múltiples tareas que trabajan de forma coordinada. Se implementó la comunicación mediante colas, 
+    permitiendo que sensores, botones, actuadores y el administrador principal intercambiaran información
+    de manera segura. Además, se observó la importancia de centralizar las decisiones en una tarea de 
+    control, aplicar filtros para mejorar la calidad de las mediciones y gestionar correctamente los 
+    estados del sistema. En conjunto, la práctica permitió entender cómo desarrollar aplicaciones 
+    embebidas más organizadas, escalables y robustas.
